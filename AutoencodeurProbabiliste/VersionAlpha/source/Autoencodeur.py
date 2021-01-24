@@ -4,13 +4,13 @@ import tensorflow.keras.datasets.mnist as mnist
 
 
 #Chargement de l'ensemble de données MNIST composé de 60000 paires
-# image/étiquette d'entraînement et 10000 paires image/étiquette de test:
+# image/étiquette d'entraînement et 10000 paires image/étiquette de test
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
 
 # Remodelation des donnees: 60000 vecteurs de dimension 784 au lieu des 60000 matrices de dimensions 28x28
 train_images = train_images.reshape(60000, 784)
 
-# Conversion de chaque pixel en un nombre flottant 32 bits
+#Conversion de chaque pixel en un nombre flottant 32 bits
 train_images = train_images.astype('float32')
 
 #Normalisation des valeurs de chaque pixel pour les rendre entre 0 et 1
@@ -26,8 +26,11 @@ train_dataset = train_dataset.shuffle(buffer_size=1024).batch(64)
 
 
 
-# Classe personnalisée, étendant la classe Layer, responsable de l'échantillonnage
 class Echantillonage(layers.Layer):
+  """ Classe personnalisée Echantillonage, étendant la classe Layer. Une instance de cette classe est responsable
+  de l'échantillonnage a partir d'une distribution normale cetrée réduite. Elle prend en entrée deux tenseurs z_mu et
+  z_log_var et renvoie un échantillon d'un vecteur de variables aléatoires suivant une loi gausienne de moyenne z_mu et
+  de variance exp(z_log_var)"""
 
   def call(self, inputs):
     z_mean, z_log_var = inputs
@@ -39,8 +42,11 @@ class Echantillonage(layers.Layer):
     return z_mean + tf.exp(z_log_var/2) * epsilon
 
 
-# Classe de l'encodeur Q, étendant la classe Layer
+
 class EncodeurQ(layers.Layer):
+  """ Classe de l'encodeur Q, étendant la classe Layer. Une instance de cette classe prend en entrée un tenseur x (image MNIST), passe la par
+   3 couches Dense cachées et le transforme en deux tenseurs z_mu et z_log_var. Ces deux tenseurs passent ensuite par une couche
+   d'echantillonage, et finalement un tenseur latent z est renvoyé"""
   def __init__(self, latent_dim, couche1, couche2, couche3):
 
     super(EncodeurQ, self).__init__()
@@ -66,10 +72,12 @@ class EncodeurQ(layers.Layer):
     return z_mu, z_log_var, z
 
 
-# Classe du décodeur P, étendant la classe Layer
-class DecodeurP(layers.Layer):
 
-  def __init__(self, couche1, couche2, couche3):
+class DecodeurP(layers.Layer):
+  """Classe du décodeur P, étendant la classe Layer. Une instance de cette classe prend en entrée un tenseur latent z
+  et renvoie sa reconstruction x """
+
+  def __init__(self, couche1, couche2, couche3, output_dim):
 
     super(DecodeurP, self).__init__()
     # 3 couches cachées de dimensions couche1, couche2 et couche3 respectivement
@@ -79,7 +87,7 @@ class DecodeurP(layers.Layer):
 
     # Couche de sortie de 784 dimensions avec une activation sigmoide pour que ces
     # valeurs sont entre 0 et 1 comme les pixels de l'image d'entrée
-    self.sortie = layers.Dense(784, activation='sigmoid')
+    self.sortie = layers.Dense(output_dim, activation='sigmoid')
 
   def call(self, inputs):
     x = self.c1(inputs)
@@ -90,16 +98,19 @@ class DecodeurP(layers.Layer):
 
 
 
-# Classe d'autoencoder, étendant la classe Model, qui relie l'encodeur et le décodeur ensemble en un modèle:
+
 class AutoEncodeur(tf.keras.Model):
-  def __init__(self, latent_dim, dim_couche_1,dim_couche_2, dim_couche_3, kl_poids ):
+  """ Classe d'autoencoder, étendant la classe Model, qui relie l'encodeur et le décodeur ensemble en un modèle. """
+  def __init__(self, latent_dim, dim_couche_1,dim_couche_2, dim_couche_3, kl_poids):
     super(AutoEncodeur, self).__init__()
     # Poids de la perte KL dans
+
     self.input_dim = 784
+    self.latent_dim = latent_dim
     self.kl_poids = kl_poids
     self.encoder = EncodeurQ(latent_dim, dim_couche_1, dim_couche_2, dim_couche_3)
 
-    self.decoder = DecodeurP(dim_couche_3, dim_couche_2, dim_couche_1)
+    self.decoder = DecodeurP(dim_couche_3, dim_couche_2, dim_couche_1, self.input_dim)
 
   def call(self, inputs):
     # self._set_inputs(inputs)
@@ -113,8 +124,19 @@ class AutoEncodeur(tf.keras.Model):
     self.add_loss(kl_loss)
     return reconstructed
 
-# Méthode d'entraînement personnalisée permettant des ajustements futurs faciles
+
+
 def train(model,  learning_rate, num_epochs):
+  """ Méthode d'entraînement personnalisée permettant des ajustements futurs faciles. Elle prend en entrée un modele
+  un (autoencodeur), le taux d'aprentissage et e mobre d'epoques. Apres la selection d'un optimiseur at d'une perte
+  de reconstruction, la méthode train() A chaque époque d’apprentissage, elle parcourts l’ensemble desdonnées d’entraînement,
+  lot par lot, en calculant les gradients et enoptimisant les paramètres de l’auto-encodeur ("trainable_weights").
+  À chaque époque, le processus suivant est répété pour chaque étape d’apprentissage (et chaque lot) : train() passe le lot par
+  l’au-toencoder, calcule la perte de reconstruction et ajoute la perte KL, calculée dans la méthode d’appel de l’auto-encoder.
+  Tout au long de ce processus, train() utilise tf.GradientTape()pour enregistrer les gradients calculés au cours de ce processus.
+  Cela permet de les utiliser plus tard dans l’époque pour l’optimisation du poids. """
+
+
   # Choix d'un optimiseur
   optimizer = tf.keras.optimizers.Adam(learning_rate)
 
