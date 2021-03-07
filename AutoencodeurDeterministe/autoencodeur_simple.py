@@ -1,14 +1,15 @@
 from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras import Model
 from tensorflow.keras.datasets import mnist
+import tensorflow.keras.datasets.cifar10 as cifar
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import tensorflow
 
 # Preparation des donnees MNIST
-(train_images, train_labels), (test_images, test_labels) = mnist.load_data()
-train_images = train_images.reshape(60000, 784)
-test_images = test_images.reshape(10000, 784)
+(train_images, train_labels), (test_images, test_labels) = cifar.load_data()
+train_images = train_images.reshape(50000, 3*1024)
+test_images = test_images.reshape(10000, 3*1024)
 train_images = train_images.astype('float32')
 test_images = test_images.astype('float32')
 train_images /= 255
@@ -20,34 +21,20 @@ class Autoencoder(Model):
         super(Autoencoder, self).__init__()
 
         self.encoder = tensorflow.keras.Sequential([
-            Dense(512, activation='relu')(Input(shape=(784,))),
-            Dense(64, activation='relu'),
-            Dense(2, activation='relu')
+            Dense(1024, activation='relu')(Input(shape=(3*1024,))),
+            Dense(512, activation='relu'),
+            Dense(64, activation='relu')
         ])
-
-        self.couche1 = Dense(512, activation='relu')
-        self.couche2 = Dense(64, activation='relu')
-        self.couche3 = Dense(2, activation='relu')
-
 
         self.decoder = tensorflow.keras.Sequential([
-            Dense(64, activation='relu'),
             Dense(512, activation='relu'),
-            Dense(784, activation='sigmoid'),
+            Dense(1024, activation='relu'),
+            Dense(3*1024, activation='sigmoid'),
         ])
-
-        couche1 = tensorflow.keras.Dense(32, activation='relu')
-
-        couche2 = Dense(64, activation='relu')(couche1)
-
 
 
     def call(self, x):
-        x = self.couche1(x)
-        x = self.couche2(x)
-        encoded = self.couche3(x)
-
-        #encoded = self.encoder(x)
+        encoded = self.encoder(x)
         decoded = self.decoder(encoded)
         return decoded
 
@@ -76,13 +63,13 @@ if __name__=='__main__':
     j = 15
     for i in range(10):
         inputaxis = plt.subplot(2, 10, i + 1)
-        plt.imshow(test_images[j].reshape(28, 28))
+        plt.imshow(test_images[j].reshape(32, 32,3))
         plt.gray()
         inputaxis.get_xaxis().set_visible(False)
         inputaxis.get_yaxis().set_visible(False)
 
         outputaxis = plt.subplot(2, 10, i + 11)
-        plt.imshow(decoded_images[j].reshape(28, 28))
+        plt.imshow(decoded_images[j].reshape(32, 32,3))
         plt.gray()
         outputaxis.get_xaxis().set_visible(False)
         outputaxis.get_yaxis().set_visible(False)

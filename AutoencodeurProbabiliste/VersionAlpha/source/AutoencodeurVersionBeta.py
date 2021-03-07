@@ -95,6 +95,3 @@ def train(model,  learning_rate, num_epochs):
       # Affiche la perte moyenne actuelle pour chaque cent pas
       if step % 100 == 0:
         print('Pas %s: perte moyenne = %s' % (step, loss_metric.result()))
-
-
-
