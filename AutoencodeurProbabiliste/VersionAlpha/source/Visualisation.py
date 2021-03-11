@@ -122,7 +122,7 @@ if __name__=='__main__':
     dim_couche_3 = 16
     latent_dim = 2
     input_dim = 784
-    kl_poids = 0.005
+    kl_poids = 0.012
 
     # Preparation dún auto-encodeur
     test_images, test_labels = Donnees.Donnees.test_donnees_mnist()

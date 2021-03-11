@@ -21,7 +21,7 @@ class Donnees():
 
         # Normalisation des valeurs de chaque pixel pour les rendre entre 0 et 1
         train_images = train_images / 255
-        #train_images = 1 - train_images
+        train_images = 1 - train_images
 
         # Création d'un jeu de données dont les éléments sont des tranches des tenseurs donnés -
         # les tenseurs donnés sont découpés le long de leur première dimension
@@ -49,7 +49,7 @@ class Donnees():
 
         #Normalisation des valeurs de chaque pixel pour les rendre entre 0 et 1
         test_images = test_images/255
-        #test_images = 1 - test_images
+        test_images = 1 - test_images
 
         return test_images, test_labels
 

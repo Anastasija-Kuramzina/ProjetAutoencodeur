@@ -39,7 +39,6 @@ class AutoEncodeur(tf.keras.Model):
 
 
 
-
 def train(model,  learning_rate, num_epochs):
   """ Méthode d'entraînement personnalisée permettant des ajustements futurs faciles. Elle prend en entrée un modele
   un (autoencodeur), le taux d'aprentissage et e mobre d'epoques. Apres la selection d'un optimiseur at d'une perte
