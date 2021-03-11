@@ -52,7 +52,7 @@ def train(model,  learning_rate, num_epochs):
 
 
   # Acquerir les donnees:
-  train_dataset = Donnees.Donnees.train_donnees_cifar()
+  train_dataset = Donnees.Donnees.train_donnees_mnist()
 
   # Choix d'un optimiseur
   optimizer = tf.keras.optimizers.Adam(learning_rate)

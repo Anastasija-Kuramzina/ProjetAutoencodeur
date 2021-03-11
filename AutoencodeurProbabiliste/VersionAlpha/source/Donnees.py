@@ -1,6 +1,8 @@
-import tensorflow.keras.datasets.mnist as mnist
+import tensorflow.keras.datasets.fashion_mnist as mnist
 import tensorflow.keras.datasets.cifar10 as cifar
 import tensorflow as tf
+import numpy
+
 
 class Donnees():
 
@@ -19,6 +21,7 @@ class Donnees():
 
         # Normalisation des valeurs de chaque pixel pour les rendre entre 0 et 1
         train_images = train_images / 255
+        #train_images = 1 - train_images
 
         # Création d'un jeu de données dont les éléments sont des tranches des tenseurs donnés -
         # les tenseurs donnés sont découpés le long de leur première dimension
@@ -46,6 +49,7 @@ class Donnees():
 
         #Normalisation des valeurs de chaque pixel pour les rendre entre 0 et 1
         test_images = test_images/255
+        #test_images = 1 - test_images
 
         return test_images, test_labels
 
@@ -59,7 +63,13 @@ class Donnees():
 
         (train_images, train_labels), (test_images, test_labels) = cifar.load_data()
         # Remodelation des donnees: 50000 vecteurs de dimension 1024 au lieu des 50000 matrices de dimensions 32x32
-        train_images = train_images.reshape(50000, 3*1024)
+        train_images = train_images.reshape(50000, 1024, 3)
+        print(tf.shape(train_images))
+        train_images = numpy.array(train_images)
+        print(train_images.shape)
+        train_images = train_images[:,:,0]
+        print(train_images.shape)
+
 
         # Conversion de chaque pixel en un nombre flottant 32 bits
         train_images = train_images.astype('float32')
@@ -84,7 +94,14 @@ class Donnees():
         (train_images, train_labels), (test_images, test_labels) = cifar.load_data()
 
         # Remodelation des donnees: 10000 vecteurs de dimension 1024 au lieu des 10000 matrices de dimensions 32x32
-        test_images = test_images.reshape(10000, 3*1024)
+
+        test_images = test_images.reshape(10000, 1024, 3)
+        print(tf.shape(test_images))
+        test_images = numpy.array(test_images)
+        print(test_images.shape)
+        test_images = test_images[:,:,0]
+        print(test_images.shape)
+
 
         # Conversion de chaque pixel en un nombre flottant 32 bits
         test_images = test_images.astype('float32')
