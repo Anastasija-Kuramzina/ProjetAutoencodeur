@@ -67,27 +67,4 @@ class Affichage():
         return image
 
 
-if __name__=='__main__':
-
-    # Choix des hyperparametres
-    learning_rate = 0.005
-    num_epochs = 20
-    dim_couche_1 = 512
-    dim_couche_2 = 128
-    dim_couche_3 = 16
-    latent_dim = 2
-    input_dim = 784
-    kl_poids = 0.0012
-
-    # Preparation d'un auto-encodeur et des donnees
-    test_images, test_labels = modules.Donnees.test_donnees_mnist()
-
-    autoencodeur = modules.Affichage.preparer_autoencodeur(input_dim, latent_dim, dim_couche_1, dim_couche_2, dim_couche_3, kl_poids,  learning_rate, num_epochs)
-
-    for i in range(10):
-        x = i/8 * 0.5 * (-1)**i
-        y =  i/7 * 1.5 * (-1)**i
-        vect = [x,y]
-        modules.Affichage.afficher_image_reconstruite(vect)
-
 
