@@ -4,17 +4,16 @@ import tensorflow as tf
 import numpy as np
 import random
 from scipy.stats import norm
-import tensorflow.keras.datasets.mnist as mnist
-import AutoencodeurProbabiliste.VersionAlpha.source.Autoencodeur as AE
-import AutoencodeurProbabiliste.VersionAlpha.source.Donnees as Donnees
+import AutoencodeurProbabiliste.modules as modules
+
 
 def preparer_autoencodeur(test_images):
     """ Méthode chargée de l'instantiation d'un autoencodeur, de son entrainement et de
     preparation des images reconstruites """
 
     # Chargement et entrainement d'un autoencodeur
-    autoencodeur = AE.AutoEncodeur(input_dim, latent_dim, dim_couche_1, dim_couche_2, dim_couche_3, kl_poids)
-    AE.train(autoencodeur, learning_rate, num_epochs)
+    autoencodeur = modules.AutoEncodeur(input_dim, latent_dim, dim_couche_1, dim_couche_2, dim_couche_3, kl_poids)
+    modules.train(autoencodeur, learning_rate, num_epochs)
 
     # Preparation des images pour une visualisation:
     reconstructed = autoencodeur(test_images)
@@ -53,7 +52,7 @@ def colors(labels):
     return colors
 
 
-def latent_plot(z_mu, z_log_var, test_labels):
+def latent_plot(encoded, test_labels):
     """" Preparation des encodages pour une visualisation, conversion de chaque vecteur latent en
     un couple des coordonnées et cisualisation des points obtenues dans une grille"""
     X_latent = []
@@ -68,7 +67,6 @@ def latent_plot(z_mu, z_log_var, test_labels):
     plt.scatter(X_latent, Y_latent, c=colors(test_labels))
 
     #Etiquettes
-    #etiquettes = {0:'avion', 1:'voiture', 2:'oiseau', 3:'chat', 4:'cerf',5:'chien',6:'grenouille',7:'cheval', 8:'bateau',9:'camion'}
     etiquettes = {0: 'T-shirt', 1: 'Pantalons', 2: 'Pull', 3: 'Robe', 4: 'Manteau', 5: 'Sandale', 6: 'Chemise', 7: 'Sneaker',
                   8: 'Sac', 9: 'Botte'}
 
@@ -78,7 +76,6 @@ def latent_plot(z_mu, z_log_var, test_labels):
         patchlist.append(mpatches.Patch(color=colors([i])[0], label=etiquettes[i]))
     plt.legend(handles=patchlist)
     plt.show()
-
 
 
 def decoder_grille(autoencodeur):
@@ -111,12 +108,11 @@ def decoder_grille(autoencodeur):
     plt.show()
 
 
-
 if __name__=='__main__':
 
     # Choix des hyperparametres
     learning_rate = 0.005
-    num_epochs = 60
+    num_epochs = 6
     dim_couche_1 = 512
     dim_couche_2 = 256
     dim_couche_3 = 16
@@ -125,7 +121,7 @@ if __name__=='__main__':
     kl_poids = 0.012
 
     # Preparation dún auto-encodeur
-    test_images, test_labels = Donnees.Donnees.test_donnees_mnist()
+    test_images, test_labels = modules.Donnees.test_donnees_mnist()
 
     # Conversion des etiquettes
     test_labels = np.array(test_labels)
@@ -141,7 +137,7 @@ if __name__=='__main__':
 
     # Visualisation de l'espace latent
     z_mu, z_log_var, encoded = autoencodeur.encoder(test_images)
-    latent_plot(z_mu, z_log_var, test_labels)
+    latent_plot(encoded, test_labels)
 
     # Decodage d'un morceau de l'espace latent
     decoder_grille(autoencodeur)

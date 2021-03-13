@@ -1,7 +1,5 @@
-import tensorflow as tf
 from tensorflow.keras import layers
-import AutoencodeurProbabiliste.VersionAlpha.source.Echantillonage as EC
-
+import AutoencodeurProbabiliste.modules as modules
 
 class EncodeurQ(layers.Layer):
   """ Classe de l'encodeur Q, étendant la classe Layer. Une instance de cette classe prend en entrée un tenseur x (image MNIST), passe la par
@@ -20,7 +18,7 @@ class EncodeurQ(layers.Layer):
     self.z_log_var = layers.Dense(latent_dim, activation=None)
 
     # Tenseur échantilloné z
-    self.echantillonage = EC.Echantillonage()
+    self.echantillonage = modules.Echantillonage()
 
   def call(self, inputs):
 

@@ -1,42 +1,28 @@
-from tensorflow.keras import layers
 import tensorflow as tf
-import tensorflow.keras.datasets.mnist as mnist
 
-import AutoencodeurProbabiliste.VersionAlpha.source.EncodeurQ as Enc
-import AutoencodeurProbabiliste.VersionAlpha.source.DecodeurP as Dec
-import AutoencodeurProbabiliste.VersionAlpha.source.Donnees as Donnees
-
-
+import AutoencodeurProbabiliste.modules as modules
 
 class AutoEncodeur(tf.keras.Model):
   """ Classe d'autoencoder, étendant la classe Model, qui relie l'encodeur et le décodeur ensemble en un modèle. """
   def __init__(self, input_dim, latent_dim, dim_couche_1,dim_couche_2, dim_couche_3, kl_poids):
     super(AutoEncodeur, self).__init__()
-    # Poids de la perte KL dans
 
     self.input_dim = input_dim
     self.latent_dim = latent_dim
     self.kl_poids = kl_poids
-    self.encoder = Enc.EncodeurQ(latent_dim, dim_couche_1, dim_couche_2, dim_couche_3)
+    self.encoder = modules.EncodeurQ(latent_dim, dim_couche_1, dim_couche_2, dim_couche_3)
 
-    self.decoder = Dec.DecodeurP(dim_couche_3, dim_couche_2, dim_couche_1, self.input_dim)
+    self.decoder = modules.DecodeurP(dim_couche_3, dim_couche_2, dim_couche_1, self.input_dim)
 
   def call(self, inputs):
     # self._set_inputs(inputs)
     z_mu, z_log_var, z = self.encoder(inputs)
     reconstructed = self.decoder(z)
-
     # Calcule la perte de divergence KL
-    kl_loss = - 0.5 * tf.reduce_mean(z_log_var - tf.square(z_mu) - tf.exp(z_log_var) + 1)
+    kl_loss = - 0.5 * tf.reduce_mean(tf.reduce_sum(z_log_var - tf.square(z_mu) - tf.exp(z_log_var) + 1))
     kl_loss = kl_loss * self.kl_poids
     self.add_loss(kl_loss)
     return reconstructed
-
-  def display(self):
-    """Methode affichant les informations sur la structure de l'autoencodeur"""
-    print("Structure de l'autoencodeur : ")
-
-
 
 
 def train(model,  learning_rate, num_epochs):
@@ -51,7 +37,7 @@ def train(model,  learning_rate, num_epochs):
 
 
   # Acquerir les donnees:
-  train_dataset = Donnees.Donnees.train_donnees_mnist()
+  train_dataset = modules.Donnees.train_donnees_mnist()
 
   # Choix d'un optimiseur
   optimizer = tf.keras.optimizers.Adam(learning_rate)
@@ -77,7 +63,7 @@ def train(model,  learning_rate, num_epochs):
         reconstructed = model(training_batch)
 
         # Calcule la perte de reconstruction en utilisant l'entropie croisée
-        perte = tf.keras.losses.binary_crossentropy(training_batch, reconstructed) #perte_reconstruction(training_batch, reconstructed)
+        perte = tf.reduce_mean(tf.reduce_sum(tf.keras.losses.binary_crossentropy(training_batch, reconstructed))) #perte_reconstruction(training_batch, reconstructed)
 
        # Ajoute la perte de divergence KL calculée dans la méthode call() de l'autoencodeur
        # La perte KL est calculée dans la méthode call() car c'est là qu'elle a un accès direct à z_mu et z_log_var

@@ -1,5 +1,5 @@
 import unittest
-from source import Autoencodeur as AE
+from AutoencodeurProbabiliste.modules import Autoencodeur as AE
 
 
 class LatentTest(unittest.TestCase):
