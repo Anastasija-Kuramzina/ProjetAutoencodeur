@@ -27,14 +27,11 @@ class Affichage():
         plt.imshow(image.reshape(28, 28))
         axis.get_xaxis().set_visible(False)
         axis.get_yaxis().set_visible(False)
-        text = "Image "+str(n)
-        print(text)
-        plt.text(0, 0, text)
         plt.show()
         return image
 
     @classmethod
-    def obtenir_vecteur(cls,images,n):
+    def obtenir_vecteur(cls,images,n, autoencodeur):
         """Methode prenant en entree un tenseur d'images et une indice n, qui encode l'image d'indice n a l'aide de l'encodeur"""
         image = images[n]
         image = tf.convert_to_tensor(image, dtype=tf.float32)
@@ -50,15 +47,13 @@ class Affichage():
         return vect
 
     @classmethod
-    def afficher_image_reconstruite(cls,vecteur):
+    def afficher_image_reconstruite(cls,vecteur, autoencodeur):
         """Methode prenant en entree un vecteur et lui decodant a l'aide du decodeur, puis affichant et renvoyant le resultat."""
         plt.gray()
         vecteur = modules.Affichage.vecteur_prep(vecteur)
         image = autoencodeur.decoder(vecteur)
         image = tf.reshape(image,[28, 28])
         axis = plt.subplot(1, 1, 1)
-        titre = str(vecteur)
-        plt.text(0, 0, titre)
         axis.get_xaxis().set_visible(False)
         axis.get_yaxis().set_visible(False)
         plt.imshow(image)
@@ -66,9 +61,9 @@ class Affichage():
         return image
 
     @classmethod
-    def melange_images(cls,vect1, vect2):
+    def melange_images(cls,vect1, vect2, autoencodeur):
         moyenne = (vect1+vect2)/2
-        image = modules.Affichage.afficher_image_reconstruite(moyenne)
+        image = modules.Affichage.afficher_image_reconstruite(moyenne, autoencodeur)
         return image
 
 
@@ -86,6 +81,7 @@ if __name__=='__main__':
 
     # Preparation d'un auto-encodeur et des donnees
     test_images, test_labels = modules.Donnees.test_donnees_mnist()
+
     autoencodeur = modules.Affichage.preparer_autoencodeur(input_dim, latent_dim, dim_couche_1, dim_couche_2, dim_couche_3, kl_poids,  learning_rate, num_epochs)
 
     for i in range(10):
