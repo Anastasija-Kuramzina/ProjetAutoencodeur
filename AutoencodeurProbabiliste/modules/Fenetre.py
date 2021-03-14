@@ -5,7 +5,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import threading
 
 
-class InterfaceGraphique():
+class Fenetre():
     """ Classe responsable pour l'affichage de l'interface graphique """
 
     def __init__(self):
@@ -122,5 +122,5 @@ class InterfaceGraphique():
 
 if __name__=='__main__':
 
-    interface = InterfaceGraphique()
+    interface = Fenetre()
     interface.fenetre.mainloop()
