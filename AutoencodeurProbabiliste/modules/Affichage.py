@@ -7,15 +7,6 @@ class Affichage():
     """Classe contenant des methodes utilisees par l'interface graphique"""
 
     @classmethod
-    def preparer_autoencodeur(cls,input_dim, latent_dim, dim_couche_1, dim_couche_2, dim_couche_3, kl_poids, learning_rate, num_epochs):
-        """ Méthode chargée de l'instantiation d'un autoencodeur et de son entrainement """
-
-        autoencodeur = modules.AutoEncodeur(input_dim, latent_dim, dim_couche_1, dim_couche_2, dim_couche_3, kl_poids)
-        modules.train(autoencodeur, learning_rate, num_epochs, "")
-        return autoencodeur
-
-
-    @classmethod
     def afficher_image_originale(cls,images,n, axis):
         """Methode prenant en entree un tenseur d'images et une indice n, qui affiche et renvoye l'image d'indice n"""
         plt.gray()
