@@ -2,6 +2,7 @@ import AutoencodeurProbabiliste.modules as modules
 import matplotlib.pyplot as plt
 import tensorflow as tf
 
+
 class Affichage():
     """Classe contenant des methodes utilisees par l'interface graphique"""
 
@@ -10,24 +11,18 @@ class Affichage():
         """ Méthode chargée de l'instantiation d'un autoencodeur et de son entrainement """
 
         autoencodeur = modules.AutoEncodeur(input_dim, latent_dim, dim_couche_1, dim_couche_2, dim_couche_3, kl_poids)
-        modules.train(autoencodeur, learning_rate, num_epochs)
+        modules.train(autoencodeur, learning_rate, num_epochs, "")
         return autoencodeur
 
 
     @classmethod
-    def afficher_informations(cls,autoencodeur):
-        return
-
-    @classmethod
-    def afficher_image_originale(cls,images,n):
+    def afficher_image_originale(cls,images,n, axis):
         """Methode prenant en entree un tenseur d'images et une indice n, qui affiche et renvoye l'image d'indice n"""
         plt.gray()
-        axis = plt.subplot(1, 1, 1)
         image = images[n]
-        plt.imshow(image.reshape(28, 28))
+        axis.imshow(image.reshape(28, 28))
         axis.get_xaxis().set_visible(False)
         axis.get_yaxis().set_visible(False)
-        plt.show()
         return image
 
     @classmethod
@@ -47,24 +42,21 @@ class Affichage():
         return vect
 
     @classmethod
-    def afficher_image_reconstruite(cls,vecteur, autoencodeur):
+    def afficher_image_reconstruite(cls,vecteur, autoencodeur, axis):
         """Methode prenant en entree un vecteur et lui decodant a l'aide du decodeur, puis affichant et renvoyant le resultat."""
         plt.gray()
         vecteur = modules.Affichage.vecteur_prep(vecteur)
         image = autoencodeur.decoder(vecteur)
         image = tf.reshape(image,[28, 28])
-        axis = plt.subplot(1, 1, 1)
-        axis.get_xaxis().set_visible(False)
-        axis.get_yaxis().set_visible(False)
-        plt.imshow(image)
-        plt.show()
+        axis.imshow(image)
         return image
 
     @classmethod
     def melange_images(cls,vect1, vect2, autoencodeur):
         moyenne = (vect1+vect2)/2
-        image = modules.Affichage.afficher_image_reconstruite(moyenne, autoencodeur)
-        return image
+        return moyenne
 
 
+if __name__=='__main__':
 
+    print("hello")
