@@ -7,3 +7,10 @@ from .test_input import *
 from .test_latent import *
 from .Visualisation import *
 from .Affichage import *
+from .UI_gallerie import *
+from .UI_fenetre import *
+from .UI_entrainement import *
+from .UI_resultats import *
+from .UI_check import *
+from .UI_plot import *
+from .UI_morceau import *

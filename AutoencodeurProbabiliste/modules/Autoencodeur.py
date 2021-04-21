@@ -1,17 +1,16 @@
 import tensorflow as tf
-
 import AutoencodeurProbabiliste.modules as modules
+import math
+
 
 class AutoEncodeur(tf.keras.Model):
   """ Classe d'autoencoder, étendant la classe Model, qui relie l'encodeur et le décodeur ensemble en un modèle. """
   def __init__(self, input_dim, latent_dim, dim_couche_1,dim_couche_2, dim_couche_3, kl_poids):
     super(AutoEncodeur, self).__init__()
-
     self.input_dim = input_dim
     self.latent_dim = latent_dim
     self.kl_poids = kl_poids
     self.encoder = modules.EncodeurQ(latent_dim, dim_couche_1, dim_couche_2, dim_couche_3)
-
     self.decoder = modules.DecodeurP(dim_couche_3, dim_couche_2, dim_couche_1, self.input_dim)
 
   def call(self, inputs):
@@ -25,7 +24,7 @@ class AutoEncodeur(tf.keras.Model):
     return reconstructed
 
 
-def train(model,  learning_rate, num_epochs):
+def train(model,  learning_rate, num_epochs, progress):
   """ Méthode d'entraînement personnalisée permettant des ajustements futurs faciles. Elle prend en entrée un modele
   un (autoencodeur), le taux d'aprentissage et e mobre d'epoques. Apres la selection d'un optimiseur at d'une perte
   de reconstruction, la méthode train() A chaque époque d’apprentissage, elle parcourts l’ensemble desdonnées d’entraînement,
@@ -50,7 +49,6 @@ def train(model,  learning_rate, num_epochs):
 
   # Itération sur l'ensemble de données pour chaque époque:
   for epoch in range(num_epochs):
-    print('Époque %d / %d commence.' % (epoch+1, num_epochs))
 
     # Iterations pour chaque lot (batch) des donnees:
     # Quoi faire a chaque pas et por chaque batch
@@ -79,6 +77,15 @@ def train(model,  learning_rate, num_epochs):
 
       # Affiche la perte moyenne actuelle pour chaque cent pas
       if step % 100 == 0:
-        print(('Époque %d / %d. Pas %s / 1000' % (epoch+1, num_epochs, step)))
+        texte = ' Époque %d / %d. Pas %s / 1000. Perte %s pourcent' % (epoch+1, num_epochs, step, loss_metric(perte))
+        print(texte)
 
-  print("Entrainement fini!")
+    texte = ' ÉPOQUE %d / %d. PERTE MOYENNE: %s ' % (
+    epoch + 1, num_epochs, loss_metric(perte).numpy())
+    print(texte)
+
+    if math.isnan(loss_metric(perte).numpy()):
+      print("ÉCHEC D'ENTRAÎNEMENT")
+      return
+
+  return loss_metric(perte).numpy()

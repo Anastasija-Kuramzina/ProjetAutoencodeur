@@ -13,7 +13,7 @@ def preparer_autoencodeur(test_images):
 
     # Chargement et entrainement d'un autoencodeur
     autoencodeur = modules.AutoEncodeur(input_dim, latent_dim, dim_couche_1, dim_couche_2, dim_couche_3, kl_poids)
-    modules.train(autoencodeur, learning_rate, num_epochs)
+    modules.train(autoencodeur, learning_rate, num_epochs, [])
 
     # Preparation des images pour une visualisation:
     reconstructed = autoencodeur(test_images)

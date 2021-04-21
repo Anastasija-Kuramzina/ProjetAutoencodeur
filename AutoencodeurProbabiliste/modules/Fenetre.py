@@ -2,17 +2,16 @@ import tkinter as tk
 import AutoencodeurProbabiliste.modules as modules
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import threading
 
 
 class Fenetre():
-    """ Classe responsable pour l'affichage de l'interface graphique """
+    """ Classe responsable de l'affichage de l'interface graphique """
 
     def __init__(self):
 
         # Fenetre principale
         self.fenetre = tk.Tk()
-        self.fenetre.geometry("800x670")
+        self.fenetre.geometry("1200x670")
 
         # Donnees et autoencodeur
         self.donnees, labels = modules.Donnees.test_donnees_mnist()

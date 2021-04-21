@@ -6,7 +6,8 @@ import numpy
 
 class Donnees():
 
-    def train_donnees_mnist():
+    @classmethod
+    def train_donnees_mnist(cls):
         """"Methode qui charge et prepare des images de l'entrainement MNIST"""
 
         # Chargement de l'ensemble de données MNIST composé de 60000 paires
@@ -34,7 +35,8 @@ class Donnees():
         return train_dataset
 
 
-    def test_donnees_mnist():
+    @classmethod
+    def test_donnees_mnist(cls):
         """"Methode qui charge et prepare des images de test MNIST"""
 
         #Chargement de l'ensemble de données MNIST composé de 60000 paires
@@ -54,8 +56,14 @@ class Donnees():
         return test_images, test_labels
 
 
+    @classmethod
+    def test_donnees_mnist_origin(cls):
+        (test_images, test_labels) = mnist.load_data()
+        return test_images, test_labels
 
-    def train_donnees_cifar():
+
+    @classmethod
+    def train_donnees_cifar(cls):
         """"Methode qui charge et prepare des images de l'entrainement Cifar10"""
 
         # Chargement de l'ensemble de données Cifar10 composé de 50000 paires
@@ -69,7 +77,6 @@ class Donnees():
         print(train_images.shape)
         train_images = train_images[:,:,0]
         print(train_images.shape)
-
 
         # Conversion de chaque pixel en un nombre flottant 32 bits
         train_images = train_images.astype('float32')
@@ -86,8 +93,8 @@ class Donnees():
         train_dataset = train_dataset.shuffle(buffer_size=1024).batch(64)
         return train_dataset
 
-
-    def test_donnees_cifar():
+    @classmethod
+    def test_donnees_cifar(cls):
         """"Methode qui charge et prepare des images de test Cifar10"""
         #Chargement de l'ensemble de données Cifar10 composé de 50000 paires
         # image/étiquette d'entraînement et 10000 paires image/étiquette de test:
