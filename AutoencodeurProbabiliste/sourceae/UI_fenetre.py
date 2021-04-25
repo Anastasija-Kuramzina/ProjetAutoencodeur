@@ -1,6 +1,6 @@
 import tkinter as tk
 from PIL import ImageTk, Image
-import AutoencodeurProbabiliste.projetae as modules
+import AutoencodeurProbabiliste.sourceae as projetae
 
 
 class UI_fenetre():
@@ -26,12 +26,14 @@ class UI_fenetre():
     :param startbouton: bouton pour fermer l'écran de titre et ouvrir l'écran de l'entraînement
     :type startbouton: class 'tkinter.Button'
     """
+
     def __init__(self):
         """"Constructeur de la classe UI_fenetre.
 
         Il construit d'abord la fenetre principale, puis il initialise les objets des classes UI_gallerie et UI_resultats
         ,qui font partie de l'eécran de gestion des images, et un objet de classe UI_entrainement - un écran de
-        l'entrainement. À la fin, il construit l'écran de titre qui est créé au-dessus des autres écrans."""
+        l'entrainement. À la fin, il construit l'écran de titre qui est créé au-dessus des autres écrans.
+        """
 
         # Fenêtre principale
         self.fenetre = tk.Tk()

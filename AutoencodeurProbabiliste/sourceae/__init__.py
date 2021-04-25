@@ -2,9 +2,7 @@ from .Echantillonage import *
 from .EncodeurQ import *
 from .DecodeurP import *
 from .Donnees import *
-from .Autoencodeur import *
-from .test_input import *
-from .test_latent import *
+from .AutoEncodeur import *
 from .Visualisation import *
 from .Affichage import *
 from .UI_gallerie import *
@@ -14,3 +12,10 @@ from .UI_resultats import *
 from .UI_check import *
 from .UI_plot import *
 from .UI_morceau import *
+from .Hypotheses import *
+from .test_ordre_couches import *
+from .test_learning_rate import *
+from .test_couche_nulle import *
+from .test_decalage_droite import *
+from .test_decalage_gauche import *
+from .test_symmetrie import *

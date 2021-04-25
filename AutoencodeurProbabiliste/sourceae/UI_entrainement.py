@@ -1,5 +1,5 @@
 import tkinter as tk
-import AutoencodeurProbabiliste.projetae as modules
+import AutoencodeurProbabiliste.sourceae as projetae
 from PIL import ImageTk, Image
 
 class UI_entrainement():
@@ -160,7 +160,7 @@ class UI_entrainement():
         self.morceaubouton.place(x=600, y=615)
 
 
-    def train(self):
+    def train(self, params = []):
         '''Méthode principale de l'entrainement.
 
         Elle vérifie que les hyperparametres sont correctement choisis a l'aide
@@ -173,8 +173,11 @@ class UI_entrainement():
         self.progress.configure(text="              VÉRIFICATION DES HYPERPARAMETRES                  ")
         self.progress.place(x=100, y=410)
 
-        # Preparation des hyperparametres entieres et de learning rate
-        self.params = self.toint([self.couchelatente.get(),self.couche1.get(), self.couche2.get(), self.couche3.get(),self.epochs.get()])
+        if params == []:
+            # Preparation des hyperparametres entieres et de learning rate
+            self.params = self.toint([self.couchelatente.get(),self.couche1.get(), self.couche2.get(), self.couche3.get(),self.epochs.get()])
+        else:
+            self.params = params
         lr = float(self.lr.get())
         # Parametres incorrectement saisis: signaler ceci a l'utilisateur et sortir
         if (self.verifier_params(self.params, lr) == -1):
@@ -200,7 +203,6 @@ class UI_entrainement():
                 self.plotbouton.configure(state='active') # Graphique disponible seulement pour dim = 2
             self.checkbouton.configure(state='active')
             self.morceaubouton.configure(state='active')
-
             self.training_status = 1
 
 

@@ -1,5 +1,5 @@
 import tkinter as tk
-import AutoencodeurProbabiliste.projetae as modules
+import AutoencodeurProbabiliste.sourceae as projetae
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
@@ -97,7 +97,6 @@ class Fenetre():
                                                                                                                y=340)
         projetae.Affichage.afficher_image_originale(self.donnees, im1, self.axis1)
         self.im1.draw()
-
 
         # Afficher image 2 et vecteur 2
         im2 = int(image2)

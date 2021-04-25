@@ -1,5 +1,5 @@
 import tensorflow as tf
-import AutoencodeurProbabiliste.projetae as modules
+import AutoencodeurProbabiliste.sourceae as projetae
 import math
 
 class AutoEncodeur(tf.keras.Model):

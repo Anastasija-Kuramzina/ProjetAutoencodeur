@@ -1,5 +1,5 @@
 from tensorflow.keras import layers
-import AutoencodeurProbabiliste.projetae as modules
+import AutoencodeurProbabiliste.sourceae as projetae
 
 class EncodeurQ(layers.Layer):
   """ Classe de l'encodeur Q, étendant la classe Layer.

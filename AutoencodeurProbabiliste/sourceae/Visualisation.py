@@ -6,7 +6,7 @@ import tensorflow as tf
 import numpy as np
 import random
 from scipy.stats import norm
-import AutoencodeurProbabiliste.projetae as modules
+import AutoencodeurProbabiliste.sourceae as modules
 
 
 def preparer_autoencodeur(test_images):

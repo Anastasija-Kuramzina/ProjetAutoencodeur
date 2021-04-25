@@ -28,10 +28,11 @@ class DecodeurP(layers.Layer):
     self.c1 = layers.Dense(couche1, activation='relu')
     self.c2 = layers.Dense(couche2, activation='relu')
     self.c3 = layers.Dense(couche3, activation='relu')
+    self.output_dim = output_dim
 
     # Couche de sortie de 784 dimensions avec une activation sigmoide pour que ces
     # valeurs sont entre 0 et 1 comme les pixels de l'image d'entrée
-    self.sortie = layers.Dense(output_dim, activation='sigmoid')
+    self.sortie = layers.Dense(self.output_dim, activation='sigmoid')
 
   def call(self, inputs):
     """La méthode de la superclasse Layer, définissant ce qui se passe à chaque étape de l'entraînement au tenseur entrant.

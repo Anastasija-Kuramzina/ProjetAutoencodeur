@@ -1,10 +1,5 @@
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-import tensorflow as tf
-import numpy as np
-import math
-from scipy.stats import norm
-import AutoencodeurProbabiliste.projetae as modules
+import AutoencodeurProbabiliste.sourceae as projetae
 
 class Hypotheses():
     """Classe utilisée pour l'étude de l'influence des hyperparametres sur les aspects différents de la

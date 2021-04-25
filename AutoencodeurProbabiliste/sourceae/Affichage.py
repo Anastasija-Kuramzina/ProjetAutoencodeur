@@ -1,4 +1,4 @@
-import AutoencodeurProbabiliste.projetae as modules
+import AutoencodeurProbabiliste.sourceae as modules
 import matplotlib.pyplot as plt
 import tensorflow as tf
 

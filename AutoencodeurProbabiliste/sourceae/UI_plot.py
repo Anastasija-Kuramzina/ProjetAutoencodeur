@@ -1,4 +1,4 @@
-import AutoencodeurProbabiliste.projetae as modules
+import AutoencodeurProbabiliste.sourceae as projetae
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
