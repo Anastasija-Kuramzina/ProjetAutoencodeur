@@ -1,5 +1,5 @@
 import unittest
-from AutoencodeurProbabiliste.modules import Autoencodeur as AE
+from AutoencodeurProbabiliste.projetae import Autoencodeur as AE
 
 
 class InputTest(unittest.TestCase):

@@ -1,15 +1,60 @@
 import tkinter as tk
-import AutoencodeurProbabiliste.modules as modules
+import AutoencodeurProbabiliste.projetae as modules
 from PIL import ImageTk, Image
 
 class UI_entrainement():
-    """Classe responsable de l'écran de l'entrainement, """
+    """Classe responsable de l'écran de l'entrainement dans l'interface graphique.
+
+     :param fenetre: fenêtre principale de l'interface graphique ou l'écran sera ajouté
+     :type fenetre: class: 'tkinter.Tk'
+     :param mainwindow: fenêtre principale
+     :type mainwindow: class 'AutoencodeurProbabiliste.modules.UI_entrainement.UI_entrainement'
+     :param donnees: images test a utiliser pour les visualisations
+     :type donnees: class 'numpy.ndarray'
+     :param training: page de l'entraînement contenant tous les autres composants
+     :type training: class 'tkinter.Frame'
+     :param params: les hyperparametres initialisés
+     :type params: list
+     :param training_status: nombre indiquant si l'autoencodeur a ete entraîné ou pas
+     :type training_status: int
+     :param autoencodeur: autoencodeur a entraîner, initialisé comme un string vide
+     :type autoencodeur: class 'AutoencodeurProbabiliste.modules.Autoencodeur.AutoEncodeur'
+     :param couche1: une boîte pour que l'utilisateur entre la taille de la couche 1
+     :type couche1: class 'tkinter.Entry'
+     :param couche2: une boîte pour que l'utilisateur entre la taille de la couche 2
+     :type couche2: class 'tkinter.Entry'
+     :param couche3: une boîte pour que l'utilisateur entre la taille de la couche 3
+     :type couche3: class 'tkinter.Entry'
+     :param couchelatente: une boîte pour que l'utilisateur entre la dimension latente
+     :type couchelatente: class 'tkinter.Entry'
+     :param lr: une boîte pour que l'utilisateur entre le taux d'aprentissage
+     :type lr: class 'tkinter.Entry'
+     :param epochs: une boîte pour que l'utilisateur entre le nombre d';epoques
+     :type epochs: class 'tkinter.Entry'
+     :param ecran: écran affichant les commentaires sur hyperparmetres et l'entraînement
+     :type ecran: class 'tkinter.Frame'
+     :param progress: texte de self.ecran qui est mis a jour pendant l'exécution
+     :type progress: class 'tkinter.Label'
+     :param entrainer: bouton pour commencer l'entraînement
+     :type entrainer: class 'tkinter.Button'
+     :param check: fenêtre affichant 10 images originales et leurs reconstructions
+     :type check: class 'AutoencodeurProbabiliste.modules.UI_check.UI_check'
+     :param checkbouton: bouton pour afficher self.plot
+     :type checkbouton: class 'tkinter.Button'
+     :param plot: fenêtre affichant un scatterplot des encodages des images originales
+     :type plot: class 'AutoencodeurProbabiliste.modules.UI_plot.UI_plot'
+     :param plotbouton: bouton pour afficher self.plot
+     :type plotbouton: class 'tkinter.Button'
+     :param morceau: fenêtre affichant un morceau de 20x20 images aléatoirement générées
+     :type morceau: class 'AutoencodeurProbabiliste.modules.UI_morceau.UI_morceau'
+     :param morceaubouton: bouton pour afficher self.morceau
+     :type morceaubouton: class 'tkinter.Button'
+     """
 
     def __init__(self, fenetre, mainwindow):
-
         self.fenetre = fenetre
         self.mainwindow = mainwindow
-        self.donnees, labels = modules.Donnees.test_donnees_mnist()
+        self.donnees, labels = projetae.Donnees.test_donnees_mnist()
 
         # Page de l'entrainement
         self.training = tk.Frame(master=self.fenetre, width=900, height=700, bg='black', relief='sunken')
@@ -85,8 +130,7 @@ class UI_entrainement():
 
 
         # Visualisation de qualité de l'autoencodeur
-        self.check = modules.UI_check(self.fenetre, self)
-
+        self.check = projetae.UI_check(self.fenetre, self)
         # Bouton de vérification de qualité resultats
         self.checkbouton = tk.Button(self.training, text="VÉRIFIER LES\nRÉSULTATS", justify='center',
                                bg="black", activebackground='black', fg='blueviolet',
@@ -96,7 +140,7 @@ class UI_entrainement():
 
 
         # Visualisation des images encodées dans l'espace latent 2D
-        self.plot = modules.UI_plot(self.fenetre, self)
+        self.plot = projetae.UI_plot(self.fenetre, self)
         # Bouton d'affichage de la graphique
         self.plotbouton = tk.Button(self.training, text="PLOT: STRUCTURE\nLATENTE", justify='center',
                                    bg="black", activebackground='black', fg='blueviolet',
@@ -105,10 +149,8 @@ class UI_entrainement():
         self.plotbouton.place(x=120, y=615)
 
 
-
         # Décodage d'un morceau aléatoire de l'espace latent régularisé
-        self.morceau= modules.UI_morceau(self.fenetre, self)
-
+        self.morceau= projetae.UI_morceau(self.fenetre, self)
         # Bouton d'affichage de l'espace latent (morceau decode)
         self.morceaubouton = tk.Button(self.training, text="ESPACE LATENTE:\nDÉCODAGE", justify='center',
                                bg="black", activebackground='black', fg='blueviolet',
@@ -119,10 +161,14 @@ class UI_entrainement():
 
 
     def train(self):
-        '''Méthode principale de l'entrainement. Elle vérifie que les hyperparametres sont correctement choisis a l'aide
-         de la méthode verifier_params() et, si les hyperparametres sont choisis correctement elle entraine l'autoencodeur a
-         l'aide de la méthode train() de classe Autoencodeur. Finalement cette méthode active les boutons dependantses aux résultats
-         de l'entrainement et change le statut de l'entrainement.'''
+        '''Méthode principale de l'entrainement.
+
+        Elle vérifie que les hyperparametres sont correctement choisis a l'aide
+        de la méthode verifier_params() et, si les hyperparametres sont choisis correctement elle entraine l'autoencodeur a
+        l'aide de la méthode train() de classe Autoencodeur. Finalement cette méthode active les boutons dépendantes aux résultats
+        de l'entrainement et change le statut de l'entrainement.
+        '''
+
         print('VÉRIFICATION DES HYPERPARAMETRES')
         self.progress.configure(text="              VÉRIFICATION DES HYPERPARAMETRES                  ")
         self.progress.place(x=100, y=410)
@@ -138,11 +184,11 @@ class UI_entrainement():
             self.progress.configure(text="           ENTRAÎNEMENT COMMENCE                ")
             print('ENTRAINEMENT COMMENCE')
 
-            self.autoencoder = modules.AutoEncodeur(input_dim=784, latent_dim=self.params[0],
-                                                    dim_couche_1=self.params[1], dim_couche_2=self.params[2],
-                                                    dim_couche_3=self.params[3], kl_poids=0.0012)
+            self.autoencoder = projetae.AutoEncodeur(input_dim=784, latent_dim=self.params[0],
+                                                     dim_couche_1=self.params[1], dim_couche_2=self.params[2],
+                                                     dim_couche_3=self.params[3], kl_poids=0.0012)
             # Entraînement
-            perte = modules.train(self.autoencoder, lr, self.params[4], self.progress)
+            perte = projetae.train(self.autoencoder, lr, self.params[4])
             # Message de fin de l'entraînement
             self.progress = tk.Label(self.training,
                                      text="ENTRAÎNEMENT FINI AVEC PERTE FINALE " + str(perte) + " %"      ,
@@ -159,7 +205,13 @@ class UI_entrainement():
 
 
     def toint(self, params):
-        """Méthode convertissant les entrées (hyperparametres) en entiers"""
+        """Méthode convertissant les entrées (hyperparametres) en entiers
+
+        :param params: liste des strings - les hyperparametres saisis par l'utilisateur
+        :type params: list
+        :return: liste des valeurs entieres des hyperparametres
+        :rtype: list
+        """
         int_params = []
         for i in params:
             int_params.append(int(i))
@@ -168,7 +220,15 @@ class UI_entrainement():
 
     def verifier_params(self, params, lr):
         """Méthode vérifiant que les hyperparametres saisis satisfont les conditions nécessaires minimales pour que
-        l'autoencodeur fonctionne correctement et signalant les problemes et potentiels solutions a l'utilisateur """
+        l'autoencodeur fonctionne correctement et signalant les problemes et potentiels solutions a l'utilisateur
+
+         :param params: hyperparametres entiers chosis par l'utilisateur
+         :type params: list
+         :param lr: taux d'aprentissage choisi par l'utilisateur
+         :type lr: float
+         :return: -1 si les hyperparametres ne vérifient les conditions et il faut les resaisir; 0 si les hyperparametres satisfont les conditions
+         :rtype: int
+         """
 
         for i in params:
             if i < 1 or i >= 784:
@@ -185,10 +245,4 @@ class UI_entrainement():
 
         return 0
 
-
-    def on_enter_check(self):
-        self.check_hover.configure(text = "Does this work?")
-
-    def on_leave_check(self):
-        self.check_hover.configure(text = "")
 

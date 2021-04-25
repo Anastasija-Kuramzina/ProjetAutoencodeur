@@ -1,11 +1,10 @@
 import tkinter as tk
-import AutoencodeurProbabiliste.modules as modules
+import AutoencodeurProbabiliste.projetae as modules
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-
 class Fenetre():
-    """ Classe responsable de l'affichage de l'interface graphique """
+    """ Classe ancienne responsable de l'affichage de l'interface graphique. Pas utilisée depuis version Beta. """
 
     def __init__(self):
 
@@ -14,8 +13,8 @@ class Fenetre():
         self.fenetre.geometry("1200x670")
 
         # Donnees et autoencodeur
-        self.donnees, labels = modules.Donnees.test_donnees_mnist()
-        self.autoencoder = modules.AutoEncodeur(input_dim = 784, latent_dim = 2, dim_couche_1 = 512, dim_couche_2 = 256, dim_couche_3 = 32, kl_poids = 0.0012)
+        self.donnees, labels = projetae.Donnees.test_donnees_mnist()
+        self.autoencoder = projetae.AutoEncodeur(input_dim = 784, latent_dim = 2, dim_couche_1 = 512, dim_couche_2 = 256, dim_couche_3 = 32, kl_poids = 0.0012)
 
         # Endroit pour l'entrainement
         self.training = tk.Frame(master=self.fenetre, width=700, height=95, bg='cornflowerblue')
@@ -93,33 +92,27 @@ class Fenetre():
 
         # Afficher image 1 et vecteur 1
         im1 = int(image1)
-        vecteur1 = modules.Affichage.obtenir_vecteur(self.donnees, im1, self.autoencoder)
+        vecteur1 = projetae.Affichage.obtenir_vecteur(self.donnees, im1, self.autoencoder)
         self.vect1 = tk.Label(self.fenetre, text=str(vecteur1.numpy()), bg='cornflowerblue', fg='white').place(x=230,
                                                                                                                y=340)
-        modules.Affichage.afficher_image_originale(self.donnees, im1, self.axis1)
+        projetae.Affichage.afficher_image_originale(self.donnees, im1, self.axis1)
         self.im1.draw()
 
 
         # Afficher image 2 et vecteur 2
         im2 = int(image2)
-        vecteur2 = modules.Affichage.obtenir_vecteur(self.donnees, im2, self.autoencoder)
+        vecteur2 = projetae.Affichage.obtenir_vecteur(self.donnees, im2, self.autoencoder)
         self.vect2 = tk.Label(self.fenetre, text=str(vecteur2.numpy()), bg='cornflowerblue', fg='white').place(x=230,
                                                                                                                y=510)
-        modules.Affichage.afficher_image_originale(self.donnees, im2, self.axis2)
+        projetae.Affichage.afficher_image_originale(self.donnees, im2, self.axis2)
         self.im2.draw()
 
         # Melanger les images
-        moyenne = modules.Affichage.melange_images(vecteur1, vecteur2, self.autoencoder)
+        moyenne = projetae.Affichage.melange_images(vecteur1, vecteur2)
         self.vect3 = tk.Label(self.fenetre, text=str(moyenne.numpy()), bg='cornflowerblue', fg='white').place(x=430, y=315)
-        modules.Affichage.afficher_image_reconstruite(moyenne, self.autoencoder, self.axis3)
+        projetae.Affichage.afficher_image_reconstruite(moyenne, self.autoencoder, self.axis3)
         self.im3.draw()
 
-
     def train(self):
-        modules.train(self.autoencoder,0.001,20)
+        projetae.train(self.autoencoder, 0.001, 20)
         self.progress = tk.Label(self.fenetre, text="Entraînement fini!", bg = 'navy', fg = 'white').place(x = 460,y = 70)
-
-if __name__=='__main__':
-
-    interface = Fenetre()
-    interface.fenetre.mainloop()

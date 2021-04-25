@@ -1,22 +1,35 @@
-import AutoencodeurProbabiliste.modules as modules
+import AutoencodeurProbabiliste.projetae as modules
 import matplotlib.pyplot as plt
 from scipy.stats import norm
 import numpy as np
 import tensorflow as tf
 
 class UI_morceau():
-    """ Classe responsable de l'affichage d'un graphique 2D des images données encodées dans l'espace latent """
+    """ Classe responsable de l'affichage d'un graphique 2D des images données encodées dans l'espace latent
+
+    :param fenetre: fenêtre principale
+    :type fenetre: 'tkinter.Tk'
+    :param train: écran de l'entraînement ou l'instance de UI_check va être ajoutée
+    :type train: class 'AutoencodeurProbabiliste.modules.UI_entrainement.UI_entrainement'
+    :param donnees: les images a utiliser
+    :type donnees: class 'numpy.ndarray'
+    """
 
     def __init__(self, fenetre, entrainement):
         # Fenetre principale
         self.fenetre = fenetre
         self.train = entrainement
-        self.donnees, self.labels = modules.Donnees.test_donnees_mnist()
+        self.donnees, self.labels = projetae.Donnees.test_donnees_mnist()
 
     def preparer_autoencoder(self):
+        """ Méthode vérifiant si un autoencodeur entraîné est disponible.
+
+        :return: liste vide si aucun autoencodeur entraîné est disponible, et les images reconstuites par l'autoencodeur sinon
+        :rtype: list / class 'numpy.ndarray'
+        """
         if self.train.training_status == 0:
             print('Autoencodeur pas encore entraîné')
-            return -1
+            return []
         elif self.train.training_status == 1:
             autoencodeur = self.train.autoencoder
             return autoencodeur

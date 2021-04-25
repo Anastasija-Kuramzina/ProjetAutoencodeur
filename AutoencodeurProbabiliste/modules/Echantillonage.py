@@ -8,6 +8,13 @@ class Echantillonage(layers.Layer):
   de variance exp(z_log_var)"""
 
   def call(self, inputs):
+    """La méthode de la superclasse Layer, définissant ce qui se passe à chaque étape de l'entraînement au tenseur entrant
+
+    :param inputs: liste contenant deux tenseurs 2D de taille (batch_size, latent_dim) - le vecteur des moyennes et le vecteur des log variances
+    :type inputs: list
+    :return: tenseurs 2D de taille (batch_size, latent_dim) représentant la variable latente z
+    :rtype: class 'tensorflow.python.framework.ops.EagerTensor'
+    """
     z_mean, z_log_var = inputs
     batch = tf.shape(z_mean)[0]
     dim = tf.shape(z_mean)[1]

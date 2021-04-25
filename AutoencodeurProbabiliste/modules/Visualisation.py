@@ -1,19 +1,27 @@
+# Fichier contenant méthodes nécessaires pour les visualisations de la performance de l'autoencodeur
+# Code ancien, pas utilisé depuis version Alpha
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import tensorflow as tf
 import numpy as np
 import random
 from scipy.stats import norm
-import AutoencodeurProbabiliste.modules as modules
+import AutoencodeurProbabiliste.projetae as modules
 
 
 def preparer_autoencodeur(test_images):
     """ Méthode chargée de l'instantiation d'un autoencodeur, de son entrainement et de
-    preparation des images reconstruites """
+    preparation des images reconstruites
+
+    :param test_images: tenseur 2D de taille (batch_size, 784) contenant les images d'entrée
+    :param type: class 'tensorflow.python.framework.ops.EagerTensor'
+    :return: tenseur 2D de taille (batch_size, 784) contenant les images reconstruites, instance de classe AutoEncodeur
+    :rtype: list
+    """
 
     # Chargement et entrainement d'un autoencodeur
-    autoencodeur = modules.AutoEncodeur(input_dim, latent_dim, dim_couche_1, dim_couche_2, dim_couche_3, kl_poids)
-    modules.train(autoencodeur, learning_rate, num_epochs, [])
+    autoencodeur = projetae.AutoEncodeur(input_dim, latent_dim, dim_couche_1, dim_couche_2, dim_couche_3, kl_poids)
+    projetae.train(autoencodeur, learning_rate, num_epochs)
 
     # Preparation des images pour une visualisation:
     reconstructed = autoencodeur(test_images)
@@ -22,7 +30,8 @@ def preparer_autoencodeur(test_images):
 
 def comparer_resultats():
     """ Visualisation de la performance d'une instance de classe AutoEncodeur. Cette méthode affiche 10 images originales
-    et leurs recostructions """
+    et leurs recostructions.
+    """
     digit_size = 28
     plt.figure(figsize=(20, 4))
     j = random.randint(0,64)
@@ -45,7 +54,14 @@ def comparer_resultats():
 
 
 def colors(labels):
-    """" Assignation d'un couleur a chaque chiffre (chaque classe de MNIST) pour pouvoir visualiser l'espace latent"""
+    """" Assignation d'un couleur a chaque chiffre (chaque classe de MNIST) pour pouvoir visualiser l'espace latent.
+
+    :param labels: liste d'entiers - étiquettes des images MNIST
+    :type labels: class 'numpy.ndarray'
+    :return: liste des strings - noms de couleurs associés aux étiquettes
+    :rtype: class 'numpy.ndarray'
+
+    """
     cols = {0: 'lightcoral', 1: 'olivedrab', 2: 'goldenrod', 3: 'darkseagreen', 4: 'saddlebrown',
                 5: 'steelblue', 6: 'cornflowerblue', 7: 'limegreen', 8: 'darkviolet', 9: 'slateblue'}
     colors = list(map(cols.get, labels))
@@ -53,8 +69,15 @@ def colors(labels):
 
 
 def latent_plot(encoded, test_labels):
-    """" Preparation des encodages pour une visualisation, conversion de chaque vecteur latent en
-    un couple des coordonnées et cisualisation des points obtenues dans une grille"""
+    """" Préparation des encodages pour une visualisation, conversion de chaque vecteur latent en
+    un couple des coordonnées et visualisation des points obtenues sous la forme d'un scatterplot.
+
+    :param encoded: un tenseur 2D de taille (batch_size, latent_dim) contenant les représentations latented des images test de MNIST
+    :type encoded: class 'tensorflow.python.framework.ops.EagerTensor'
+    :param test_labels: array contenant les étiquettes, une pour chaque image
+    :type test_labels: class 'numpy.ndarray'
+
+    """
     X_latent = []
     Y_latent = []
 
@@ -79,7 +102,15 @@ def latent_plot(encoded, test_labels):
 
 
 def decoder_grille(autoencodeur):
-    """Décodage et affichage d'un morceau de l'espace latent"""
+    """Méthode décodage un morceau aléatoirement chosi de l'espace latent en une grille de 20x20 images.
+
+    Pour chaque couple [x,y] des coordonnées générés alétoirement a partir d'un morceau 20x20 de l'espace latent,
+    on lui passe par le décodeur pour générer une image. Ensuite on affiche les 400 images obtenues sous la
+    forme d'une grille montrant la continuité de l'espace latent.
+
+    :param autoencodeur: autoencodeur dont le décodeur sera utilisé pour le décodage des coordonnées aléatoires
+    :type autoencodeur: classe: 'modules.AutoEncodeur'
+    """
     num_digits = 20
     digit_size = 28
     figure = np.zeros((digit_size * num_digits, digit_size * num_digits))
@@ -112,7 +143,7 @@ if __name__=='__main__':
 
     # Choix des hyperparametres
     learning_rate = 0.005
-    num_epochs = 6
+    num_epochs = 2
     dim_couche_1 = 512
     dim_couche_2 = 256
     dim_couche_3 = 16
@@ -121,7 +152,7 @@ if __name__=='__main__':
     kl_poids = 0.012
 
     # Preparation dún auto-encodeur
-    test_images, test_labels = modules.Donnees.test_donnees_mnist()
+    test_images, test_labels = projetae.Donnees.test_donnees_mnist()
 
     # Conversion des etiquettes
     test_labels = np.array(test_labels)
